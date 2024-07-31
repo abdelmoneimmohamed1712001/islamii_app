@@ -14,7 +14,7 @@ class _HadethTabState extends State<HadethTab> {
 
   @override
   Widget build(BuildContext context) {
-    loadHadithFile();
+    if (hadithList.isEmpty) loadHadithFile();
 
     return Container(
       child: hadithList.isEmpty
