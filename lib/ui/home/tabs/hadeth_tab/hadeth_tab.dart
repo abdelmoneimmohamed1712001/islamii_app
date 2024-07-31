@@ -4,7 +4,12 @@ import 'package:islamii/ui/home/tabs/hadeth_tab/hadith_title_widget.dart';
 
 import '../../../../utils/image_utils.dart';
 
-class HadethTab extends StatelessWidget {
+class HadethTab extends StatefulWidget {
+  @override
+  State<HadethTab> createState() => _HadethTabState();
+}
+
+class _HadethTabState extends State<HadethTab> {
   List<HadithItem> hadithList = [];
 
   @override
@@ -44,7 +49,8 @@ class HadethTab extends StatelessWidget {
                   flex: 2,
                   child: ListView.separated(
                       itemBuilder: (context, index) => HadithTitleWidget(
-                          hadithTitle: hadithList[index].title),
+                            hadithItem: hadithList[index],
+                          ),
                       separatorBuilder: (context, index) => Divider(
                             color: Color(0xffB7935F),
                             thickness: 1,
@@ -72,6 +78,7 @@ class HadethTab extends StatelessWidget {
           HadithItem(title: hadithTitle, content: hadithContent);
       hadithList.add(hadithItem);
     }
+    setState(() {});
   }
 }
 
