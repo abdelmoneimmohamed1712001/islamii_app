@@ -13,7 +13,6 @@ class VerseWidget extends StatelessWidget {
       child: Text(
         verse,
         textAlign: TextAlign.center,
-        textDirection: TextDirection.rtl,
         style: Theme.of(context).textTheme.bodySmall,
       ),
     );
