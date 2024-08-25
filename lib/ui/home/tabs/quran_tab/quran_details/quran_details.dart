@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:islamii/providers/settings_provider/settings_provider.dart';
-import 'package:islamii/ui/home/tabs/quran_tab/quran_details/verse_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../utils/image_utils.dart';
@@ -23,7 +23,11 @@ class _QuranDetailsScreenState extends State<QuranDetailsScreen> {
     var myThemeMode = Provider.of<SettingsProvider>(context);
     SuraArguments arguments =
         ModalRoute.of(context)?.settings.arguments as SuraArguments;
-    if (verses.isEmpty) loadFile(arguments.index);
+
+    // تحميل الآيات إذا كانت القائمة فارغة فقط
+    if (verses.isEmpty) {
+      loadFile(arguments.index);
+    }
 
     return Container(
       decoration: BoxDecoration(
@@ -58,15 +62,17 @@ class _QuranDetailsScreenState extends State<QuranDetailsScreen> {
                         color: Theme.of(context).dividerColor,
                       ),
                       Expanded(
-                        child: ListView.separated(
-                          itemBuilder: (context, index) =>
-                              VerseWidget(verse: verses[index]),
-                          separatorBuilder: (context, index) => Divider(
-                              thickness: 1,
-                              endIndent: 24,
-                              indent: 24,
-                              color: Theme.of(context).dividerColor),
-                          itemCount: verses.length,
+                        child: SingleChildScrollView(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 4, horizontal: 8),
+                            child: RichText(
+                              text: TextSpan(
+                                children: buildVerseSpans(context),
+                              ),
+                              textDirection: TextDirection.rtl,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -75,16 +81,37 @@ class _QuranDetailsScreenState extends State<QuranDetailsScreen> {
     );
   }
 
+  List<InlineSpan> buildVerseSpans(BuildContext context) {
+    List<InlineSpan> spans = [];
+
+    for (int i = 0; i < verses.length; i++) {
+      spans.add(TextSpan(
+        text: verses[i].trim(),
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            fontSize: 25, fontFamily: GoogleFonts.amiriQuran().fontFamily),
+      ));
+      spans.add(TextSpan(
+        text: ' ${i + 1} ',
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              fontFamily: 'Aya',
+              fontSize: 27,
+              color: Colors.grey,
+            ),
+      ));
+    }
+
+    return spans;
+  }
+
   void loadFile(int index) async {
-    String fileContent =
-        await rootBundle.loadString('assets/files/${index + 1}.txt');
-    List<String> suraLines = fileContent.split('\n');
+    if (verses.isEmpty) {
+      String fileContent =
+          await rootBundle.loadString('assets/files/${index + 1}.txt');
+      List<String> suraLines = fileContent.trim().split('\n');
 
-    verses = suraLines;
+      verses = suraLines.where((line) => line.trim().isNotEmpty).toList();
 
-    suraLines.forEach(
-      (element) {},
-    );
-    setState(() {});
+      setState(() {});
+    }
   }
 }
