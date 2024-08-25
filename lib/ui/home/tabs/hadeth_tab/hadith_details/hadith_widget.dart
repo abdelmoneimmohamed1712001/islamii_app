@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class HadithWidget extends StatelessWidget {
   String hadithContent;
@@ -14,7 +14,7 @@ class HadithWidget extends StatelessWidget {
         hadithContent,
         textAlign: TextAlign.center,
         textDirection: TextDirection.rtl,
-        style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
+        style: Theme.of(context).textTheme.bodySmall,
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:islamii/ui/home/tabs/hadeth_tab/hadith_title_widget.dart';
 
 import '../../../../utils/image_utils.dart';
@@ -32,18 +33,15 @@ class _HadethTabState extends State<HadethTab> {
                   margin: EdgeInsets.symmetric(horizontal: 30),
                   alignment: Alignment.center,
                   child: Text(
-                    'الأحاديث',
+                    AppLocalizations.of(context)!.ahadith,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                    ),
+                    style: Theme.of(context).textTheme.labelMedium,
                   ),
                   decoration: BoxDecoration(
                       border: Border.symmetric(
-                          horizontal:
-                              BorderSide(color: Color(0xFFB7935F), width: 2))),
+                          horizontal: BorderSide(
+                              color: Theme.of(context).dividerColor,
+                              width: 2))),
                 ),
                 Expanded(
                   flex: 2,
@@ -52,7 +50,7 @@ class _HadethTabState extends State<HadethTab> {
                             hadithItem: hadithList[index],
                           ),
                       separatorBuilder: (context, index) => Divider(
-                            color: Color(0xffB7935F),
+                            color: Theme.of(context).dividerColor,
                             thickness: 1,
                             indent: 30,
                             endIndent: 30,

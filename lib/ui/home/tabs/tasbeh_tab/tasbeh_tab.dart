@@ -1,100 +1,95 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:islamii/providers/settings_provider/settings_provider.dart';
 import 'package:islamii/utils/image_utils.dart';
+import 'package:provider/provider.dart';
 
 class TasbehTab extends StatefulWidget {
   @override
   State<TasbehTab> createState() => _TasbehTabState();
 }
 
-class _TasbehTabState extends State<TasbehTab>
-    with SingleTickerProviderStateMixin {
+class _TasbehTabState extends State<TasbehTab> {
   int count = 0;
-
   int index = 0;
+  double angle = 0;
 
   List<String> tasbehWords = ['سبحان الله', 'الحمد لله', 'الله اكبر'];
 
-  late AnimationController _controller;
-
-  @override
-  void initState() {
-    _controller = AnimationController(
-      duration: Duration(milliseconds: 500),
-      vsync: this,
-    );
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
+    var myThemeProvider = Provider.of<SettingsProvider>(context);
+    Size size = MediaQuery.of(context).size;
     return Container(
       alignment: Alignment.center,
       child: Column(
         children: [
-          Expanded(
-            child: Stack(
-              alignment: Alignment.bottomCenter,
-              children: [
-                Positioned(
-                    top: 0,
-                    left: 105,
-                    child: Image.asset(
-                      getImagePathByName(imageName: 'head_of_seb7a.png'),
-                    )),
-                GestureDetector(
-                    onTap: () {
-                      onPressOnSeb7a();
-                    },
-                    child: RotationTransition(
-                        turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
+          Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              Image.asset(
+                getImagePathByName(
+                    imageName: myThemeProvider.themeMode == ThemeMode.light
+                        ? 'head_of_seb7a.png'
+                        : 'head_of_seb7a_dark.png'),
+              ),
+              GestureDetector(
+                  onTap: () {
+                    onPressOnSeb7a();
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.only(top: size.height * 0.095),
+                    child: Transform.rotate(
+                        angle: angle,
                         child: Image.asset(getImagePathByName(
-                            imageName: 'body_of_seb7a.png')))),
-              ],
-            ),
+                            imageName:
+                                myThemeProvider.themeMode == ThemeMode.light
+                                    ? 'body_of_seb7a.png'
+                                    : 'body_of_seb7a_dark.png'))),
+                  )),
+            ],
           ),
-          Expanded(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'عدد التسبيحات',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  padding: EdgeInsets.all(25),
+          Column(
+            children: [
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                AppLocalizations.of(context)!.num_of_tasbeh,
+                style: Theme.of(context).textTheme.labelMedium,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Opacity(
+                opacity: 0.8,
+                child: Container(
+                  padding: EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(18),
-                    color: Color(0x9bb7935f),
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                   child: Text(
                     count.toString(),
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.w400),
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
-                SizedBox(
-                  height: 20,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(18),
+                  color: Theme.of(context).colorScheme.primary,
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(18),
-                    color: Color(0xffB7935F),
-                  ),
-                  child: Text(
-                    tasbehWords[index],
-                    style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.white),
-                  ),
+                child: Text(
+                  tasbehWords[index],
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
-              ],
-            ),
+              ),
+            ],
           )
         ],
       ),
@@ -102,6 +97,7 @@ class _TasbehTabState extends State<TasbehTab>
   }
 
   void onPressOnSeb7a() {
+    angle += 0.12;
     setState(() {
       count++;
       if (count % 34 == 0) {
@@ -109,6 +105,5 @@ class _TasbehTabState extends State<TasbehTab>
         index = (index + 1) % tasbehWords.length;
       }
     });
-    _controller.forward(from: 0.0);
   }
 }

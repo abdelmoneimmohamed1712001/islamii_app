@@ -1,0 +1,20 @@
+{
+"app_title": "إسلامي",
+"quran": "القرآن",
+"hadith": "الحديث",
+"tasbeh": "التسبيح",
+"radio": "الراديو",
+"settings": "الإعدادات",
+"chapter_name": "إسم السورة",
+"verses_number": "عدد الآيات",
+"ahadith": "الأحاديث",
+"num_of_tasbeh": "عدد التسبيحات",
+"theme": "النمط",
+"language": "اللغة",
+"arabic": "العربية",
+"english": "الإنجليزية",
+"light": "فاتح",
+"dark": "داكن",
+"quran_radio": "إذاعة القرآن الكريم"
+
+}
