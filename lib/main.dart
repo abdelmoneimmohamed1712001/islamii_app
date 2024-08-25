@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:islamii/providers/settings_provider/settings_provider.dart';
+import 'package:islamii/style/my_theme_data.dart';
 import 'package:islamii/ui/home/home_screen.dart';
 import 'package:islamii/ui/home/tabs/hadeth_tab/hadith_details/hadith_details.dart';
 import 'package:islamii/ui/home/tabs/quran_tab/quran_details/quran_details.dart';
 import 'package:islamii/ui/splash/splash_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+      create: (context) => SettingsProvider()
+        ..getLang()
+        ..getTheme(),
+      child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -13,64 +22,28 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<SettingsProvider>(context);
     return MaterialApp(
+      localizationsDelegates: [
+        AppLocalizations.delegate, // Add this line
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('en'), // English
+        Locale('ar'), // Arabic
+      ],
+      locale: provider.locale,
       routes: {
         SplashScreen.routeName: (_) => SplashScreen(),
         HomeScreen.routeNAme: (_) => HomeScreen(),
         QuranDetailsScreen.routeName: (_) => QuranDetailsScreen(),
         HadithDetailsScreen.routeName: (_) => HadithDetailsScreen(),
       },
-      theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: Color(0xFFB7935F),
-            primary: Color(0xFFB7935F),
-          ),
-          appBarTheme: AppBarTheme(
-            titleTextStyle: TextStyle(
-                fontSize: 30, fontWeight: FontWeight.w700, color: Colors.black),
-            backgroundColor: Colors.transparent,
-            centerTitle: true,
-            elevation: 0,
-          ),
-          scaffoldBackgroundColor: Colors.transparent,
-          canvasColor: Color(0xFFB7935F),
-          bottomNavigationBarTheme: BottomNavigationBarThemeData(
-              selectedItemColor: Colors.black,
-              unselectedItemColor: Colors.white,
-              selectedIconTheme: IconThemeData(
-                size: 36,
-              ),
-              unselectedIconTheme: IconThemeData(
-                size: 24,
-              ),
-              showSelectedLabels: true,
-              showUnselectedLabels: true)),
-      darkTheme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: Color(0xFF141A2E),
-            primary: Color(0xFF141A2E),
-          ),
-          appBarTheme: AppBarTheme(
-              titleTextStyle: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white),
-              backgroundColor: Colors.transparent,
-              centerTitle: true,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(30),
-                  bottomLeft: Radius.circular(30),
-                ),
-              )),
-          scaffoldBackgroundColor: Colors.transparent,
-          bottomNavigationBarTheme: BottomNavigationBarThemeData(
-              selectedItemColor: Colors.yellow,
-              unselectedItemColor: Colors.white,
-              showSelectedLabels: true,
-              showUnselectedLabels: true)),
-      themeMode: ThemeMode.light,
+      theme: MyThemeData.lightTheme,
+      darkTheme: MyThemeData.darkTheme,
+      themeMode: provider.themeMode,
     );
   }
 }
