@@ -9,9 +9,7 @@
 #if __has_include(<audioplayers_darwin/AudioplayersDarwinPlugin.h>)
 #import <audioplayers_darwin/AudioplayersDarwinPlugin.h>
 #else
-
 @import audioplayers_darwin;
-
 #endif
 
 #if __has_include(<path_provider_foundation/PathProviderPlugin.h>)
