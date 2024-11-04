@@ -17,12 +17,6 @@ class _RadioTabState extends State<RadioTab> {
   int index = 0;
 
   @override
-  void dispose() {
-    player.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: ApiManager.getRadio(),
@@ -54,23 +48,11 @@ class _RadioTabState extends State<RadioTab> {
                   IconButton(
                     onPressed: () async {
                       if (index > 0) {
+                        index--;
                         await player.stop();
-                        setState(() {
-                          index--;
-                        });
-
-                        if (radios[index].url?.isNotEmpty ?? false) {
-                          try {
-                            await player
-                                .play(UrlSource(radios[index].url ?? ''));
-
-                            isPlay = true;
-                          } catch (e) {
-                            print("Error playing audio: $e");
-                          }
-                        } else {
-                          print("Invalid or empty URL");
-                        }
+                        await player.play(UrlSource(radios[index].url ?? ""));
+                        isPlay = true;
+                        setState(() {});
                       }
                     },
                     icon: Icon(
@@ -80,12 +62,12 @@ class _RadioTabState extends State<RadioTab> {
                     ),
                   ),
                   IconButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (isPlay) {
-                          player.stop();
+                          await player.stop();
                           isPlay = false;
                         } else {
-                          player.play(UrlSource(radios[index].url ?? ''));
+                          await player.play(UrlSource(radios[index].url ?? ''));
                           isPlay = true;
                         }
                         setState(() {});
@@ -96,23 +78,11 @@ class _RadioTabState extends State<RadioTab> {
                   IconButton(
                     onPressed: () async {
                       if (index < radios.length - 1) {
+                        index++;
                         await player.stop();
-                        setState(() {
-                          index++;
-                        });
-
-                        if (radios[index].url?.isNotEmpty ?? false) {
-                          try {
-                            await player
-                                .play(UrlSource(radios[index].url ?? ''));
-
-                            isPlay = true;
-                          } catch (e) {
-                            print("Error playing audio: $e");
-                          }
-                        } else {
-                          print("Invalid or empty URL");
-                        }
+                        await player.play(UrlSource(radios[index].url ?? ""));
+                        isPlay = true;
+                        setState(() {});
                       }
                     },
                     icon: Icon(
@@ -128,5 +98,17 @@ class _RadioTabState extends State<RadioTab> {
         );
       },
     );
+  }
+
+  @override
+  void deactivate() {
+    player.stop();
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    player.dispose();
+    super.dispose();
   }
 }
